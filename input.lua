@@ -17,7 +17,7 @@ function input:update()
 	self.nowJump = love.keyboard.isDown("x") or love.keyboard.isDown("space")
 	local joysticks = love.joystick.getJoysticks()
 	if #joysticks > 0 then
-		self.nowJump = self.nowJump or joysticks[1]:isDown(1)
+		self.nowJump = self.nowJump or joysticks[1]:isDown(2)
 	end
 end
 
