@@ -14,7 +14,7 @@ end
 
 function input:update()
     self.prevJump = self.nowJump
-    self.nowJump = love.keyboard.isDown("x")
+    self.nowJump = love.keyboard.isDown("x") or love.keyboard.isDown("space")
 end
 
 function input:getAxis()

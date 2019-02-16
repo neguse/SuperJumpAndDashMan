@@ -13,4 +13,15 @@ function draw:polygon(mode, ...)
     love.graphics.polygon(mode, ...)
 end
 
+function draw:grid()
+    local s = 100
+    local n = 30
+    for ix = -n, n do
+        love.graphics.line(ix * s, -s * n, ix * s, s * n)
+    end
+    for iy = -n, n do
+        love.graphics.line(-s * n, iy * s, s * n, iy * s)
+    end
+end
+
 return draw
