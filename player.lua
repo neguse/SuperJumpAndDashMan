@@ -2,10 +2,11 @@ local player = {}
 
 function player.new(world, input, draw, camera)
 	local body = love.physics.newBody(world, 0, 10, "dynamic")
-	local shape = love.physics.newRectangleShape(50, 50)
+	local shape = love.physics.newRectangleShape(25, 50)
 	local fixture = love.physics.newFixture(body, shape, 1)
 	body:setFixedRotation(true)
-	-- body:setMass(0.1)
+	-- print(body:getMass())
+	body:setMass(2.77)
 	local pl =
 		setmetatable(
 		{
@@ -58,8 +59,8 @@ function player:update(dt)
 				xx, yy = xx + x, yy + y
 			end
 			local a = -math.atan2(xx, yy) - math.pi * 0.5
-			local jumpUpForce = 0.8 * 2000
-			local jumpNormalForce = 0.2 * 2000
+			local jumpUpForce = 0.7 * 2000
+			local jumpNormalForce = -0.1 * 2000
 			print(a)
 			self.body:applyLinearImpulse(math.cos(a) * jumpNormalForce, math.sin(a) * jumpNormalForce + jumpUpForce)
 		end
