@@ -19,6 +19,11 @@ function rotated(x, y, angle)
 	return nx, ny
 end
 
+local kill = {}
+function kill:getType()
+	return self.type
+end
+
 function map.new(world)
 	local platform = nil
 	local startPoint = nil
@@ -26,14 +31,21 @@ function map.new(world)
 	for i, layer in ipairs(mapdata.layers) do
 		if layer.name == "platform" then
 			local bodies = {}
+			kills = {}
 			for i2, obj in ipairs(layer.objects) do
 				if obj.shape == "rectangle" then
 					local angle = -math.rad(obj.rotation)
 					local offx, offy = rotated(obj.width / 2, -obj.height / 2, angle)
 					local body = love.physics.newBody(world, obj.x + offx, -obj.y + offy, "static")
 					local shape = love.physics.newRectangleShape(0, 0, obj.width, obj.height, angle)
-					love.physics.newFixture(body, shape, 1)
-					table.insert(bodies, body)
+					local fixture = love.physics.newFixture(body, shape, 1)
+					if obj.type == "kill" then
+						ud = setmetatable({type = "K"}, {__index = kill})
+						fixture:setUserData(ud)
+						table.insert(kills, body)
+					else
+						table.insert(bodies, body)
+					end
 				elseif obj.shape == "point" and obj.type == "entry" then
 					startPoint = {x = obj.x, y = -obj.y}
 				elseif obj.shape == "point" and obj.type == "itemJump" then
@@ -44,6 +56,7 @@ function map.new(world)
 			end
 			platform = {
 				bodies = bodies,
+				kills = kills,
 				items = items
 			}
 		end
@@ -81,6 +94,14 @@ function map:render()
 			love.graphics.polygon("fill", body:getWorldPoints(fixture:getShape():getPoints()))
 		end
 	end
+	love.graphics.setColor(0xff, 0x00, 0x00, 0xff)
+	for _, body in ipairs(self.platform.kills) do
+		for _, fixture in ipairs(body:getFixtures()) do
+			love.graphics.polygon("fill", body:getWorldPoints(fixture:getShape():getPoints()))
+		end
+	end
+	love.graphics.setColor(0xff, 0xff, 0xff, 0xff)
+
 	for _, item in ipairs(self.platform.items) do
 		item:render()
 	end

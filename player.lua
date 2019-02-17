@@ -28,6 +28,7 @@ function player.new(world, input, draw, camera)
 			jumpRepair = 0,
 			dashRepair = 0,
 			dashTime = 0,
+			dead = false,
 			shadows = {},
 			respawnPoint = nil,
 			groundConsequent = 0,
@@ -51,6 +52,7 @@ function player:respawn()
 	local point = self.respawnPoint
 	self:warpTo(point.x, point.y)
 	self.camera:set(point.x, point.y)
+	self.dead = false
 end
 
 function player:warpTo(x, y)
@@ -168,6 +170,10 @@ function player:update(dt)
 
 	local x, y = self:getPosition()
 	if y < killY then
+		self.dead = true
+	end
+
+	if self.dead then
 		self:respawn()
 	end
 
@@ -217,8 +223,12 @@ function player:render()
 end
 
 function player:onContact(o)
+	local t = o:getType()
+	if o.type == "K" then
+		self.dead = true
+		return
+	end
 	if o:consume() then
-		local t = o:getType()
 		if t == "J" then
 			self.jumpMax = self.jumpMax + 1
 		elseif t == "D" then

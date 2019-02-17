@@ -9,7 +9,7 @@ return {
   tilewidth = 32,
   tileheight = 32,
   nextlayerid = 4,
-  nextobjectid = 31,
+  nextobjectid = 33,
   properties = {},
   tilesets = {},
   layers = {
@@ -280,6 +280,19 @@ return {
           y = 630.035,
           width = 0,
           height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 31,
+          name = "",
+          type = "kill",
+          shape = "rectangle",
+          x = -1420.91,
+          y = 196.604,
+          width = 509.383,
+          height = 107.239,
           rotation = 0,
           visible = true,
           properties = {}
