@@ -1,5 +1,6 @@
 local mapdata = require "mapdata"
 local item = require "item"
+local checkpoint = require "checkpoint"
 
 local map = {}
 
@@ -28,6 +29,7 @@ function map.new(world)
 	local platform = nil
 	local startPoint = nil
 	local items = {}
+	local checkpoints = {}
 	for i, layer in ipairs(mapdata.layers) do
 		if layer.name == "platform" then
 			local bodies = {}
@@ -49,15 +51,18 @@ function map.new(world)
 				elseif obj.shape == "point" and obj.type == "entry" then
 					startPoint = {x = obj.x, y = -obj.y}
 				elseif obj.shape == "point" and obj.type == "itemJump" then
-					table.insert(items, item.new(world, obj.x, obj.y, "J"))
+					table.insert(items, item.new(world, obj.x, -obj.y, "J"))
 				elseif obj.shape == "point" and obj.type == "itemDash" then
-					table.insert(items, item.new(world, obj.x, obj.y, "D"))
+					table.insert(items, item.new(world, obj.x, -obj.y, "D"))
+				elseif obj.shape == "point" and obj.type == "checkpoint" then
+					table.insert(checkpoints, checkpoint.new(world, obj.x, -obj.y))
 				end
 			end
 			platform = {
 				bodies = bodies,
 				kills = kills,
-				items = items
+				items = items,
+				checkpoints = checkpoints
 			}
 		end
 	end
@@ -104,6 +109,9 @@ function map:render()
 
 	for _, item in ipairs(self.platform.items) do
 		item:render()
+	end
+	for _, c in ipairs(self.platform.checkpoints) do
+		c:render()
 	end
 end
 

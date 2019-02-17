@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="32" tileheight="32" infinite="1" nextlayerid="4" nextobjectid="33">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="32" tileheight="32" infinite="1" nextlayerid="4" nextobjectid="36">
  <objectgroup id="3" name="platform">
   <object id="5" x="-72.068" y="253.189" width="500" height="50"/>
   <object id="6" x="-643.328" y="-32.5109" width="87" height="268" rotation="-20"/>
@@ -40,5 +40,14 @@
    <point/>
   </object>
   <object id="31" type="kill" x="-1420.91" y="196.604" width="509.383" height="107.239"/>
+  <object id="33" type="checkpoint" x="1591.93" y="627.803">
+   <point/>
+  </object>
+  <object id="34" type="checkpoint" x="-1397.61" y="650.224">
+   <point/>
+  </object>
+  <object id="35" type="checkpoint" x="-340.06" y="108.371">
+   <point/>
+  </object>
  </objectgroup>
 </map>

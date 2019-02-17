@@ -224,8 +224,13 @@ end
 
 function player:onContact(o)
 	local t = o:getType()
-	if o.type == "K" then
+	if t == "K" then
 		self.dead = true
+		return
+	end
+	if t == "C" then
+		local x, y = o:getPosition()
+		self:setRespawnPoint(x, y)
 		return
 	end
 	if o:consume() then
