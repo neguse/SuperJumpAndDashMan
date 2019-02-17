@@ -30,6 +30,7 @@ function map.new(world)
 	local startPoint = nil
 	local items = {}
 	local checkpoints = {}
+	local texts = {}
 	for i, layer in ipairs(mapdata.layers) do
 		if layer.name == "platform" then
 			local bodies = {}
@@ -56,13 +57,16 @@ function map.new(world)
 					table.insert(items, item.new(world, obj.x, -obj.y, "D"))
 				elseif obj.shape == "point" and obj.type == "checkpoint" then
 					table.insert(checkpoints, checkpoint.new(world, obj.x, -obj.y))
+				elseif obj.shape == "text" then
+					table.insert(texts, obj)
 				end
 			end
 			platform = {
 				bodies = bodies,
 				kills = kills,
 				items = items,
-				checkpoints = checkpoints
+				checkpoints = checkpoints,
+				texts = texts
 			}
 		end
 	end
@@ -112,6 +116,9 @@ function map:render()
 	end
 	for _, c in ipairs(self.platform.checkpoints) do
 		c:render()
+	end
+	for _, text in ipairs(self.platform.texts) do
+		love.graphics.print(text.text, text.x, -text.y, 0, 4, -4)
 	end
 end
 

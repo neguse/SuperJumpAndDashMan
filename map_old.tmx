@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="32" tileheight="32" infinite="1" nextlayerid="4" nextobjectid="36">
+ <objectgroup id="3" name="platform">
+  <object id="5" x="-72.068" y="253.189" width="500" height="50"/>
+  <object id="6" x="-643.328" y="-32.5109" width="87" height="268" rotation="-20"/>
+  <object id="7" x="499.761" y="-186.03" width="14" height="451" rotation="10"/>
+  <object id="8" x="53.1758" y="-307.55" width="353" height="91"/>
+  <object id="9" x="-30.1958" y="-553.504" width="71" height="217"/>
+  <object id="12" type="entry" x="33.1785" y="222.296">
+   <point/>
+  </object>
+  <object id="14" x="-166.697" y="-551.147" width="63" height="170" rotation="60"/>
+  <object id="16" x="-64.4891" y="250.707" width="10" height="400" rotation="100"/>
+  <object id="18" x="-1428.57" y="746.753" width="3198.05" height="8.11688"/>
+  <object id="19" x="1712.66" y="-1875" width="56.8182" height="2548.7"/>
+  <object id="20" x="715.698" y="-3744.42" width="56.8182" height="3181.82"/>
+  <object id="21" x="1517.86" y="-6030.84" width="40.5844" height="2678.57"/>
+  <object id="23" type="itemJump" x="-762.371" y="555.236">
+   <point/>
+  </object>
+  <object id="24" type="itemJump" x="240.761" y="232.208">
+   <point/>
+  </object>
+  <object id="25" type="itemJump" x="-750.863" y="644.419">
+   <point/>
+  </object>
+  <object id="26" type="itemJump" x="-687.572" y="632.911">
+   <point/>
+  </object>
+  <object id="27" type="itemDash" x="348.101" y="592.635">
+   <point/>
+  </object>
+  <object id="28" type="itemDash" x="385.501" y="578.251">
+   <point/>
+  </object>
+  <object id="29" type="itemDash" x="345.224" y="635.788">
+   <point/>
+  </object>
+  <object id="30" type="itemDash" x="425.777" y="630.035">
+   <point/>
+  </object>
+  <object id="31" type="kill" x="-1420.91" y="196.604" width="509.383" height="107.239"/>
+  <object id="33" type="checkpoint" x="1591.93" y="627.803">
+   <point/>
+  </object>
+  <object id="34" type="checkpoint" x="-1397.61" y="650.224">
+   <point/>
+  </object>
+  <object id="35" type="checkpoint" x="-340.06" y="108.371">
+   <point/>
+  </object>
+ </objectgroup>
+</map>
