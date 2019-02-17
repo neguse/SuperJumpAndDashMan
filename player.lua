@@ -1,8 +1,11 @@
 local player = {}
 
+local width = 25
+local height = 50
+
 function player.new(world, input, draw, camera)
 	local body = love.physics.newBody(world, 0, 10, "dynamic")
-	local shape = love.physics.newRectangleShape(25, 50)
+	local shape = love.physics.newRectangleShape(width, height)
 	local fixture = love.physics.newFixture(body, shape, 1)
 	body:setFixedRotation(true)
 	-- print(body:getMass())
@@ -20,6 +23,7 @@ function player.new(world, input, draw, camera)
 			dashTime = 0,
 			dashInAir = 1,
 			jumpInAir = 1,
+			shadows = {},
 			state = "ground"
 		},
 		{__index = player}
@@ -31,8 +35,33 @@ function player:warpTo(x, y)
 	self.body:setPosition(x, y)
 end
 
+function player:getPosition()
+	return self.body:getPosition()
+end
+
+function player:dashing()
+	return self.dashTime > 0
+end
+
 function player:getVelocity()
 	return self.body:getLinearVelocity()
+end
+
+function player:jumpable()
+	return self.state == "ground" or (self.state == "air" and self.jumpInAir > 0)
+end
+
+function player:dashable()
+	return not (self.dashTime > 0) and (self.state == "ground" or (self.state == "air" and self.dashInAir > 0))
+end
+
+function player:addShadow()
+	x, y = self:getPosition()
+	table.insert(self.shadows, {x = x, y = y})
+end
+
+function player:consumeShadow()
+	table.remove(self.shadows, 1)
 end
 
 function player:update(dt)
@@ -52,22 +81,25 @@ function player:update(dt)
 		self.state = "air"
 	end
 
-	self.dashTime = self.dashTime - dt
+	self:addShadow()
+	if self:dashing() then
+		self.dashTime = self.dashTime - dt
+	end
+	if #self.shadows > 16 then
+		self:consumeShadow()
+	end
 
 	-- move x
 	local force = 10
 	local velocity = 250
-	if self.dashTime > 0 then
+	if self:dashing() then
 		velocity = 700
 	end
 	local vx, vy = self:getVelocity()
 	self.body:applyForce(force * (ix * velocity - vx), 0)
 
 	-- dash x
-	if
-		self.input:getDash() and not (self.dashTime > 0) and
-			(self.state == "ground" or (self.state == "air" and self.dashInAir > 0))
-	 then
+	if self.input:getDash() and self:dashable() then
 		local force = 10
 		local velocity = 300
 		local vx, vy = self.body:getLinearVelocity()
@@ -79,7 +111,7 @@ function player:update(dt)
 	end
 
 	-- jump
-	if self.input:getJump() and (self.state == "ground" or (self.state == "air" and self.jumpInAir > 0)) then
+	if self.input:getJump() and self:jumpable() then
 		local xx, yy = 0, 0
 		for i, contact in ipairs(contacts) do
 			local x, y = contact:getNormal()
@@ -118,9 +150,32 @@ function player:renderui()
 	-- love.graphics.print("velo:" .. self.state)
 end
 
+function pack(...)
+	return {n = select("#", ...), ...}
+end
+
+function player:renderShadow()
+	local points = pack(self.shape:getPoints())
+	for i, shadow in ipairs(self.shadows) do
+		local newPoints = {}
+		for pi = 1, #points, 2 do
+			local px, py = points[pi] + shadow.x, points[pi + 1] + shadow.y
+			table.insert(newPoints, px)
+			table.insert(newPoints, py)
+		end
+		self.draw:polygon("line", newPoints)
+	end
+end
+
 function player:render()
-	self.draw:polygon("fill", self.body:getWorldPoints(self.shape:getPoints()))
-	-- self.draw:rect("fill", self.x, self.y, self.w, self.h)
+	self.draw:polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
+	if not self:dashable() then
+		self:renderShadow()
+	end
+	if self:jumpable() then
+		local x, y = self.body:getPosition()
+		love.graphics.ellipse("line", x, y - height / 2, 30, 10)
+	end
 end
 
 return player
