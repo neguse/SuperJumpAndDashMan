@@ -2,6 +2,7 @@ local player = {}
 
 local width = 25
 local height = 50
+local killY = -3000
 
 function player.new(world, input, draw, camera)
 	local body = love.physics.newBody(world, 0, 10, "dynamic")
@@ -24,11 +25,22 @@ function player.new(world, input, draw, camera)
 			dashInAir = 1,
 			jumpInAir = 1,
 			shadows = {},
+			respawnPoint = nil,
 			state = "ground"
 		},
 		{__index = player}
 	)
 	return pl
+end
+
+function player:setRespawnPoint(x, y)
+	self.respawnPoint = {x = x, y = y}
+end
+
+function player:respawn()
+	local point = self.respawnPoint
+	self:warpTo(point.x, point.y)
+	self.camera:set(point.x, point.y)
 end
 
 function player:warpTo(x, y)
@@ -131,6 +143,11 @@ function player:update(dt)
 		if self.state == "air" then
 			self.jumpInAir = self.jumpInAir - 1
 		end
+	end
+
+	local x, y = self:getPosition()
+	if y < killY then
+		self:respawn()
 	end
 
 	-- camera

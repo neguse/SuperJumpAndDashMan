@@ -12,7 +12,8 @@ local inp = input.new()
 local pl = player.new(world, inp, dr, cam)
 
 function love.load()
-	pl:warpTo(map:getStartPoint())
+	pl:setRespawnPoint(map:getStartPoint())
+	pl:respawn()
 end
 
 function love.update(dt)
