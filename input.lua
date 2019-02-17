@@ -5,7 +5,9 @@ function input.new()
 		setmetatable(
 		{
 			nowJump = false,
-			prevJump = false
+			prevJump = false,
+			nowDash = false,
+			prevDash = false
 		},
 		{__index = input}
 	)
@@ -18,6 +20,13 @@ function input:update()
 	local joysticks = love.joystick.getJoysticks()
 	if #joysticks > 0 then
 		self.nowJump = self.nowJump or joysticks[1]:isDown(2)
+	end
+
+	self.prevDash = self.nowDash
+	self.nowDash = love.keyboard.isDown("z")
+	local joysticks = love.joystick.getJoysticks()
+	if #joysticks > 0 then
+		self.nowDash = self.nowDash or joysticks[1]:isDown(1)
 	end
 end
 
@@ -53,6 +62,10 @@ end
 
 function input:getJump()
 	return self.nowJump and not self.prevJump
+end
+
+function input:getDash()
+	return self.nowDash and not self.prevDash
 end
 
 return input

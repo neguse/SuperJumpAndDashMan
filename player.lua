@@ -17,6 +17,7 @@ function player.new(world, input, draw, camera)
 			body = body,
 			shape = shape,
 			fixture = fixture,
+			dashTime = 0,
 			state = "stand"
 		},
 		{__index = player}
@@ -43,11 +44,25 @@ function player:update(dt)
 		self.state = "jump"
 	end
 
+	self.dashTime = self.dashTime - dt
+
 	-- move x
 	local force = 10
 	local velocity = 250
+	if self.dashTime > 0 then
+		velocity = 500
+	end
 	local vx, vy = self.body:getLinearVelocity()
-	self.body:applyForce(ix * force * math.max(velocity - math.abs(vx), 0), 0)
+	self.body:applyForce(force * (ix * velocity - vx), 0)
+
+	-- dash x
+	if self.input:getDash() then
+		local force = 10
+		local velocity = 300
+		local vx, vy = self.body:getLinearVelocity()
+		self.body:applyLinearImpulse(ix * force * math.max(velocity - math.abs(vx), 0), 0)
+		self.dashTime = 0.5
+	end
 
 	-- jump
 	if self.state == "stand" then
@@ -70,6 +85,12 @@ end
 
 function player:renderui()
 	love.graphics.print("state:" .. self.state)
+	local x, y = self.body:getPosition()
+	love.graphics.print(string.format("pos: %6.1f %6.1f", x, y), 0, 20)
+	local vx, vy = self.body:getLinearVelocity()
+	love.graphics.print(string.format("velo: %6.1f %6.1f", vx, vy), 0, 40)
+
+	-- love.graphics.print("velo:" .. self.state)
 end
 
 function player:render()

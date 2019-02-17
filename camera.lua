@@ -8,7 +8,7 @@ function camera.new()
 			y = 0,
 			tx = 0,
 			ty = 0,
-			scale = 0.5
+			scale = 0.2
 		},
 		{__index = camera}
 	)
@@ -29,10 +29,10 @@ end
 
 function camera:update(dt)
 	if math.abs(self.tx - self.x) > 300 then
-		self.x = self.x + (self.tx - self.x) * dt * 1
+		self.x = self.x + (self.tx - self.x) * dt * 5
 	end
 	if math.abs(self.ty - self.y) > 200 then
-		self.y = self.y + (self.ty - self.y) * dt * 1
+		self.y = self.y + (self.ty - self.y) * dt * 5
 	end
 end
 
