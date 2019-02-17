@@ -80,7 +80,12 @@ function player:update(dt)
 			self.body:applyLinearImpulse(math.cos(a) * jumpNormalForce, math.sin(a) * jumpNormalForce + jumpUpForce)
 		end
 	end
-	self.camera:target(self.body:getPosition())
+
+	-- camera
+	local vl = math.sqrt(vx * vx, vy * vy)
+	local ts = 0.5 - 0.25 * math.min(vl * 0.002, 1)
+	local x, y = self.body:getPosition()
+	self.camera:target(x, y, ts)
 end
 
 function player:renderui()

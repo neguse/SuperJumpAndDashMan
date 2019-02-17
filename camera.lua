@@ -8,7 +8,8 @@ function camera.new()
 			y = 0,
 			tx = 0,
 			ty = 0,
-			scale = 0.2
+			ts = 0,
+			s = 0.2
 		},
 		{__index = camera}
 	)
@@ -18,7 +19,7 @@ end
 function camera:push()
 	love.graphics.push()
 	love.graphics.translate(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
-	love.graphics.scale(self.scale, self.scale)
+	love.graphics.scale(self.s, self.s)
 	love.graphics.translate(-self.x, self.y)
 	love.graphics.scale(1, -1)
 end
@@ -34,6 +35,7 @@ function camera:update(dt)
 	if math.abs(self.ty - self.y) > 200 then
 		self.y = self.y + (self.ty - self.y) * dt * 5
 	end
+	self.s = self.s + (self.ts - self.s) * dt
 end
 
 function camera:set(x, y)
@@ -41,8 +43,8 @@ function camera:set(x, y)
 	self.y, self.ty = y
 end
 
-function camera:target(x, y)
-	self.tx, self.ty = x, y
+function camera:target(x, y, s)
+	self.tx, self.ty, self.ts = x, y, s
 end
 
 return camera
