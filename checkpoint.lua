@@ -31,7 +31,6 @@ end
 
 function checkpoint:render()
 	x, y = self.body:getPosition()
-	print(x, y)
 	r = self.shape:getRadius()
 	love.graphics.circle("line", x, y, r)
 	love.graphics.print("checkpoint", x - r / 2, y + r, 0, 2, -2, 0, 0)
