@@ -18,7 +18,9 @@ function player.new(world, input, draw, camera)
 			shape = shape,
 			fixture = fixture,
 			dashTime = 0,
-			state = "stand"
+			dashInAir = 1,
+			jumpInAir = 1,
+			state = "ground"
 		},
 		{__index = player}
 	)
@@ -43,9 +45,11 @@ function player:update(dt)
 		end
 	end
 	if touchNum > 0 then
-		self.state = "stand"
+		self.state = "ground"
+		self.dashInAir = 1
+		self.jumpInAir = 1
 	else
-		self.state = "jump"
+		self.state = "air"
 	end
 
 	self.dashTime = self.dashTime - dt
@@ -54,39 +58,46 @@ function player:update(dt)
 	local force = 10
 	local velocity = 250
 	if self.dashTime > 0 then
-		velocity = 500
+		velocity = 700
 	end
 	local vx, vy = self:getVelocity()
 	self.body:applyForce(force * (ix * velocity - vx), 0)
 
 	-- dash x
-	if self.input:getDash() then
+	if
+		self.input:getDash() and not (self.dashTime > 0) and
+			(self.state == "ground" or (self.state == "air" and self.dashInAir > 0))
+	 then
 		local force = 10
 		local velocity = 300
 		local vx, vy = self.body:getLinearVelocity()
 		self.body:applyLinearImpulse(ix * force * math.max(velocity - math.abs(vx), 0), 0)
 		self.dashTime = 0.5
+		if self.state == "air" then
+			self.dashInAir = self.dashInAir - 1
+		end
 	end
 
 	-- jump
-	if self.state == "stand" then
-		if self.input:getJump() then
-			local xx, yy = 0, 0
-			for i, contact in ipairs(contacts) do
-				local x, y = contact:getNormal()
-				xx, yy = xx + x, yy + y
-			end
-			local a = -math.atan2(xx, yy) + math.pi * 0.5 -- angle of normal
-			local vx, vy = self:getVelocity()
-			local jumpUpVelo = 500
-			local jumpNormalVelo = 200
-			local nvx, nvy = 0, jumpUpVelo
-			nvx = nvx + math.cos(a) * jumpNormalVelo
-			nvy = nvy + math.sin(a) * jumpNormalVelo
-			local dvx, dvy = nvx - vx, nvy - vy
-			local mass = self.body:getMass()
-			local fx, fy = dvx * mass, dvy * mass
-			self.body:applyLinearImpulse(fx, fy)
+	if self.input:getJump() and (self.state == "ground" or (self.state == "air" and self.jumpInAir > 0)) then
+		local xx, yy = 0, 0
+		for i, contact in ipairs(contacts) do
+			local x, y = contact:getNormal()
+			xx, yy = xx + x, yy + y
+		end
+		local a = -math.atan2(xx, yy) + math.pi * 0.5 -- angle of normal
+		local vx, vy = self:getVelocity()
+		local jumpUpVelo = 500
+		local jumpNormalVelo = 200
+		local nvx, nvy = 0, jumpUpVelo
+		nvx = nvx + math.cos(a) * jumpNormalVelo
+		nvy = nvy + math.sin(a) * jumpNormalVelo
+		local dvx, dvy = nvx - vx, nvy - vy
+		local mass = self.body:getMass()
+		local fx, fy = dvx * mass, dvy * mass
+		self.body:applyLinearImpulse(fx, fy)
+		if self.state == "air" then
+			self.jumpInAir = self.jumpInAir - 1
 		end
 	end
 
@@ -98,7 +109,7 @@ function player:update(dt)
 end
 
 function player:renderui()
-	love.graphics.print("state:" .. self.state)
+	love.graphics.print(string.format("state: %8s %8s", self.state, self.dashTime > 0 and "dash" or "nodash"))
 	local x, y = self.body:getPosition()
 	love.graphics.print(string.format("pos: %6.1f %6.1f", x, y), 0, 20)
 	local vx, vy = self.body:getLinearVelocity()
