@@ -55,8 +55,11 @@ function love.draw()
 
 	pl:render()
 	map:render()
-	love.graphics.print("Hello World こんにちは！！！", 400, 300)
 
 	cam:pop()
+
+	local fps = love.timer.getFPS()
+	love.graphics.print(string.format("FPS:%3d", fps), love.graphics.getWidth() - 70, 0)
+
 	pl:renderui()
 end
