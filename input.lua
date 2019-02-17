@@ -22,8 +22,8 @@ function input:update()
 end
 
 function normalizeCoord(x, y)
-	local a = math.atan2(x, y)
-	local l = math.sqrt(x * x + y * y)
+	local a = math.atan2(x, y) - math.pi * 0.5
+	local l = math.min(math.sqrt(x * x + y * y), 1)
 	return l * math.cos(a), l * math.sin(a)
 end
 
@@ -45,8 +45,8 @@ function input:getAxis()
 	joysticks = love.joystick.getJoysticks()
 	if #joysticks > 0 then
 		dir1, dir2 = joysticks[1]:getAxes()
-		x = x - dir2
-		y = y + dir1
+		x = x + dir1
+		y = y + dir2
 	end
 	return normalizeCoord(x, y)
 end
