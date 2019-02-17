@@ -1,4 +1,5 @@
 local mapdata = require "mapdata"
+local item = require "item"
 
 local map = {}
 
@@ -21,6 +22,7 @@ end
 function map.new(world)
 	local platform = nil
 	local startPoint = nil
+	local items = {}
 	for i, layer in ipairs(mapdata.layers) do
 		if layer.name == "platform" then
 			local bodies = {}
@@ -34,10 +36,15 @@ function map.new(world)
 					table.insert(bodies, body)
 				elseif obj.shape == "point" and obj.type == "entry" then
 					startPoint = {x = obj.x, y = -obj.y}
+				elseif obj.shape == "point" and obj.type == "itemJump" then
+					table.insert(items, item.new(world, obj.x, obj.y, "J"))
+				elseif obj.shape == "point" and obj.type == "itemDash" then
+					table.insert(items, item.new(world, obj.x, obj.y, "D"))
 				end
 			end
 			platform = {
-				bodies = bodies
+				bodies = bodies,
+				items = items
 			}
 		end
 	end
@@ -55,11 +62,27 @@ function map:getStartPoint()
 	return self.startPoint.x, self.startPoint.y
 end
 
+function map:update()
+	local i = 1
+	while i <= #self.platform.items do
+		local item = self.platform.items[i]
+		if item:isConsumed() then
+			item:destroy()
+			table.remove(self.platform.items, i)
+		else
+			i = i + 1
+		end
+	end
+end
+
 function map:render()
 	for _, body in ipairs(self.platform.bodies) do
 		for _, fixture in ipairs(body:getFixtures()) do
 			love.graphics.polygon("fill", body:getWorldPoints(fixture:getShape():getPoints()))
 		end
+	end
+	for _, item in ipairs(self.platform.items) do
+		item:render()
 	end
 end
 

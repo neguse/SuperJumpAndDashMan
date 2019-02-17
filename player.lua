@@ -21,16 +21,26 @@ function player.new(world, input, draw, camera)
 			body = body,
 			shape = shape,
 			fixture = fixture,
+			jumpMax = 0,
+			dashMax = 0,
+			jumpNum = 0,
+			dashNum = 0,
+			jumpRepair = 0,
+			dashRepair = 0,
 			dashTime = 0,
-			dashInAir = 1,
-			jumpInAir = 1,
 			shadows = {},
 			respawnPoint = nil,
+			groundConsequent = 0,
 			state = "ground"
 		},
 		{__index = player}
 	)
+	fixture:setUserData(pl)
 	return pl
+end
+
+function player:getType()
+	return "P"
 end
 
 function player:setRespawnPoint(x, y)
@@ -60,11 +70,11 @@ function player:getVelocity()
 end
 
 function player:jumpable()
-	return self.state == "ground" or (self.state == "air" and self.jumpInAir > 0)
+	return self.jumpNum > 0
 end
 
 function player:dashable()
-	return not (self.dashTime > 0) and (self.state == "ground" or (self.state == "air" and self.dashInAir > 0))
+	return self.dashNum > 0 and not (self.dashTime > 0)
 end
 
 function player:addShadow()
@@ -87,10 +97,25 @@ function player:update(dt)
 	end
 	if touchNum > 0 then
 		self.state = "ground"
-		self.dashInAir = 1
-		self.jumpInAir = 1
 	else
 		self.state = "air"
+	end
+
+	if self.state == "ground" then
+		if self.dashNum < self.dashMax then
+			self.dashRepair = self.dashRepair - 1
+			if self.dashRepair <= 0 then
+				self.dashRepair = 2
+				self.dashNum = self.dashMax
+			end
+		end
+		if self.jumpNum < self.jumpMax then
+			self.jumpRepair = self.jumpRepair - 1
+			if self.jumpRepair <= 0 then
+				self.jumpRepair = 2
+				self.jumpNum = self.jumpMax
+			end
+		end
 	end
 
 	self:addShadow()
@@ -117,9 +142,7 @@ function player:update(dt)
 		local vx, vy = self.body:getLinearVelocity()
 		self.body:applyLinearImpulse(ix * force * math.max(velocity - math.abs(vx), 0), 0)
 		self.dashTime = 0.5
-		if self.state == "air" then
-			self.dashInAir = self.dashInAir - 1
-		end
+		self.dashNum = self.dashNum - 1
 	end
 
 	-- jump
@@ -140,9 +163,7 @@ function player:update(dt)
 		local mass = self.body:getMass()
 		local fx, fy = dvx * mass, dvy * mass
 		self.body:applyLinearImpulse(fx, fy)
-		if self.state == "air" then
-			self.jumpInAir = self.jumpInAir - 1
-		end
+		self.jumpNum = self.jumpNum - 1
 	end
 
 	local x, y = self:getPosition()
@@ -163,8 +184,8 @@ function player:renderui()
 	love.graphics.print(string.format("pos: %6.1f %6.1f", x, y), 0, 20)
 	local vx, vy = self.body:getLinearVelocity()
 	love.graphics.print(string.format("velo: %6.1f %6.1f", vx, vy), 0, 40)
-
-	-- love.graphics.print("velo:" .. self.state)
+	love.graphics.print(string.format("jump: %d %d %d", self.jumpNum, self.jumpMax, self.jumpRepair), 0, 60)
+	love.graphics.print(string.format("dash: %d %d %d", self.dashNum, self.dashMax, self.dashRepair), 0, 80)
 end
 
 function pack(...)
@@ -192,6 +213,17 @@ function player:render()
 	if self:jumpable() then
 		local x, y = self.body:getPosition()
 		love.graphics.ellipse("line", x, y - height / 2, 30, 10)
+	end
+end
+
+function player:onContact(o)
+	if o:consume() then
+		local t = o:getType()
+		if t == "J" then
+			self.jumpMax = self.jumpMax + 1
+		elseif t == "D" then
+			self.dashMax = self.dashMax + 1
+		end
 	end
 end
 
