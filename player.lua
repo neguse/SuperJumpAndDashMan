@@ -29,6 +29,10 @@ function player:warpTo(x, y)
 	self.body:setPosition(x, y)
 end
 
+function player:getVelocity()
+	return self.body:getLinearVelocity()
+end
+
 function player:update(dt)
 	local ix, iy = self.input.getAxis()
 	local contacts = self.body:getContacts()
@@ -52,7 +56,7 @@ function player:update(dt)
 	if self.dashTime > 0 then
 		velocity = 500
 	end
-	local vx, vy = self.body:getLinearVelocity()
+	local vx, vy = self:getVelocity()
 	self.body:applyForce(force * (ix * velocity - vx), 0)
 
 	-- dash x
@@ -70,14 +74,19 @@ function player:update(dt)
 			local xx, yy = 0, 0
 			for i, contact in ipairs(contacts) do
 				local x, y = contact:getNormal()
-				print(i, x, y)
 				xx, yy = xx + x, yy + y
 			end
-			local a = -math.atan2(xx, yy) - math.pi * 0.5
-			local jumpUpForce = 0.7 * 2000
-			local jumpNormalForce = -0.1 * 2000
-			print(a)
-			self.body:applyLinearImpulse(math.cos(a) * jumpNormalForce, math.sin(a) * jumpNormalForce + jumpUpForce)
+			local a = -math.atan2(xx, yy) + math.pi * 0.5 -- angle of normal
+			local vx, vy = self:getVelocity()
+			local jumpUpVelo = 500
+			local jumpNormalVelo = 200
+			local nvx, nvy = 0, jumpUpVelo
+			nvx = nvx + math.cos(a) * jumpNormalVelo
+			nvy = nvy + math.sin(a) * jumpNormalVelo
+			local dvx, dvy = nvx - vx, nvy - vy
+			local mass = self.body:getMass()
+			local fx, fy = dvx * mass, dvy * mass
+			self.body:applyLinearImpulse(fx, fy)
 		end
 	end
 
