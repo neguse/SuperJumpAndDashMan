@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="250" tileheight="250" infinite="1" nextlayerid="4" nextobjectid="84">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="250" tileheight="250" infinite="1" nextlayerid="4" nextobjectid="270">
  <objectgroup id="3" name="platform">
   <object id="36" type="entry" x="0" y="-2250">
    <point/>
@@ -24,7 +24,7 @@
    <point/>
   </object>
   <object id="46" x="875" y="1375" width="89.5469" height="18.8438">
-   <text wrap="1">and press X or Button 1!</text>
+   <text wrap="1">and press X or Button 2!</text>
   </object>
   <object id="47" x="875" y="1312.5" width="89.5469" height="18.8438">
    <text wrap="1">Take this!</text>
@@ -69,5 +69,149 @@
   <object id="80" x="6250" y="875" width="125" height="125"/>
   <object id="82" x="6500" y="687.5" width="125" height="125"/>
   <object id="83" x="6750" y="500" width="125" height="125"/>
+  <object id="84" x="7000" y="-500" width="250" height="1125"/>
+  <object id="85" x="6500" y="187.5" width="89.5469" height="18.8438">
+   <text wrap="1">Can you climb this?</text>
+  </object>
+  <object id="86" type="checkpoint" x="7125" y="-562.5">
+   <point/>
+  </object>
+  <object id="87" x="7500" y="-500" width="250" height="250"/>
+  <object id="88" x="7250" y="-375" width="250" height="125"/>
+  <object id="89" type="itemDash" x="7375" y="-500">
+   <point/>
+  </object>
+  <object id="90" x="7500" y="-750" width="89.5469" height="18.8438">
+   <text wrap="1">Z or button 1!</text>
+  </object>
+  <object id="91" x="8250" y="-500" width="250" height="250"/>
+  <object id="92" x="9000" y="-500" width="250" height="250"/>
+  <object id="93" x="9750" y="-500" width="250" height="250"/>
+  <object id="94" x="7812.5" y="500" width="89.5469" height="18.8438">
+   <text wrap="1">to FALL!!!!</text>
+  </object>
+  <object id="95" x="2125" y="1875" width="89.5469" height="18.8438">
+   <text wrap="1">?</text>
+  </object>
+  <object id="96" type="itemDash" x="2125" y="2812.5">
+   <point/>
+  </object>
+  <object id="98" x="2250" y="2937.5" width="62.5" height="62.5"/>
+  <object id="99" x="1937.5" y="2937.5" width="62.5" height="62.5"/>
+  <object id="100" x="10750" y="-500" width="250" height="250"/>
+  <object id="101" x="10000" y="-1000" width="89.5469" height="18.8438">
+   <text wrap="1">Dash! And Jump! And Dash again</text>
+  </object>
+  <object id="102" x="11750" y="-500" width="250" height="250"/>
+  <object id="106" x="12750" y="-500" width="750" height="250"/>
+  <object id="107" type="checkpoint" x="13125" y="-562.5">
+   <point/>
+  </object>
+  <object id="108" x="13750" y="-1000" width="250" height="375"/>
+  <object id="121" x="13750" y="-1500" width="250" height="250"/>
+  <object id="122" x="13750" y="-2000" width="250" height="250"/>
+  <object id="123" x="13250" y="-1750" width="250" height="250"/>
+  <object id="125" type="kill" x="13500" y="-437.5" width="250" height="250"/>
+  <object id="126" x="13562.5" y="-562.5" width="89.5469" height="18.8438">
+   <text wrap="1">Red wall is too HOT!!!</text>
+  </object>
+  <object id="128" type="kill" x="13187.5" y="-3000" width="250" height="250"/>
+  <object id="129" type="kill" x="13187.5" y="-3500" width="250" height="250"/>
+  <object id="130" x="13250" y="-2250" width="250" height="250"/>
+  <object id="131" x="13250" y="-2750" width="250" height="250"/>
+  <object id="132" x="13250" y="-3250" width="250" height="250"/>
+  <object id="133" x="13750" y="-2500" width="250" height="250"/>
+  <object id="134" x="13750" y="-3000" width="250" height="250"/>
+  <object id="135" x="13750" y="-3500" width="250" height="250"/>
+  <object id="137" type="kill" x="13250" y="-4000" width="250" height="250"/>
+  <object id="138" type="kill" x="500" y="-4500" width="13000" height="250"/>
+  <object id="139" x="13250" y="-3750" width="250" height="250"/>
+  <object id="140" x="13250" y="-4250" width="250" height="250"/>
+  <object id="141" x="13750" y="-4000" width="250" height="312.5"/>
+  <object id="142" x="13750" y="-4500" width="250" height="312.5"/>
+  <object id="143" x="13250" y="-4749" width="250" height="250"/>
+  <object id="144" type="kill" x="12750" y="-4749" width="250" height="250"/>
+  <object id="145" x="12250" y="-4749" width="250" height="250"/>
+  <object id="146" type="kill" x="11750" y="-4749" width="250" height="250"/>
+  <object id="147" x="11250" y="-4749" width="250" height="250"/>
+  <object id="148" type="kill" x="10750" y="-4749" width="250" height="250"/>
+  <object id="149" x="10250" y="-4750" width="250" height="250"/>
+  <object id="150" x="1937.5" y="3000" width="375" height="62.5"/>
+  <object id="151" type="itemJump" x="2062.5" y="2875">
+   <point/>
+  </object>
+  <object id="152" type="itemJump" x="2187.5" y="2875">
+   <point/>
+  </object>
+  <object id="153" x="-1250" y="-1437.5" width="89.5469" height="18.8438">
+   <text wrap="1">What?</text>
+  </object>
+  <object id="155" x="9500" y="-4750" width="250" height="250"/>
+  <object id="156" x="11000" y="-1000" width="89.5469" height="18.8438">
+   <text wrap="1">Again</text>
+  </object>
+  <object id="157" x="12000" y="-1000" width="89.5469" height="18.8438">
+   <text wrap="1">Again</text>
+  </object>
+  <object id="158" type="checkpoint" x="13875" y="-4625">
+   <point/>
+  </object>
+  <object id="161" x="9500" y="-4750" width="250" height="250"/>
+  <object id="163" type="kill" x="9250" y="-5312.5" width="250" height="250"/>
+  <object id="164" x="9000" y="-4750" width="250" height="250"/>
+  <object id="166" type="kill" x="8750" y="-5312.5" width="250" height="250"/>
+  <object id="167" x="8500" y="-4687.5" width="250" height="250"/>
+  <object id="174" type="kill" x="8250" y="-5375" width="250" height="250"/>
+  <object id="175" type="kill" x="8250" y="-4812.5" width="250" height="375"/>
+  <object id="176" type="kill" x="7750" y="-5375" width="250" height="250"/>
+  <object id="177" type="kill" x="7750" y="-4812.5" width="250" height="375"/>
+  <object id="178" type="kill" x="7250" y="-5375" width="250" height="250"/>
+  <object id="179" type="kill" x="7250" y="-4812.5" width="250" height="375"/>
+  <object id="181" x="8000" y="-4687.5" width="250" height="250"/>
+  <object id="182" x="7500" y="-4687.5" width="250" height="250"/>
+  <object id="183" x="6250" y="-4750" width="1000" height="250"/>
+  <object id="184" type="checkpoint" x="6750" y="-4875">
+   <point/>
+  </object>
+  <object id="185" x="5750" y="-4750" width="250" height="250"/>
+  <object id="186" x="6000" y="-4625" width="250" height="125"/>
+  <object id="187" type="itemJump" x="6125" y="-4687.5">
+   <point/>
+  </object>
+  <object id="202" x="5500" y="-5375" width="250" height="250"/>
+  <object id="204" x="5250" y="-6000" width="250" height="250"/>
+  <object id="229" x="4750" y="-6750" width="250" height="750"/>
+  <object id="230" x="4750" y="-7750" width="250" height="750"/>
+  <object id="231" x="4750" y="-8750" width="250" height="750"/>
+  <object id="233" type="kill" x="4687.5" y="-8000" width="375" height="250"/>
+  <object id="234" type="kill" x="4687.5" y="-7000" width="375" height="250"/>
+  <object id="236" x="4000" y="-7250" width="250" height="750"/>
+  <object id="237" x="4000" y="-8250" width="250" height="750"/>
+  <object id="238" type="kill" x="3937.5" y="-7500" width="375" height="250"/>
+  <object id="239" type="kill" x="3937.5" y="-6500" width="375" height="250"/>
+  <object id="243" type="kill" x="3937.5" y="-9000" width="375" height="750"/>
+  <object id="244" x="5500" y="-7250" width="250" height="750"/>
+  <object id="245" x="5500" y="-8250" width="250" height="750"/>
+  <object id="246" x="5500" y="-9250" width="250" height="750"/>
+  <object id="250" x="3750" y="-5750" width="750" height="250"/>
+  <object id="251" type="kill" x="4687.5" y="-6000" width="375" height="250"/>
+  <object id="252" x="3250" y="-6750" width="250" height="750"/>
+  <object id="253" x="3250" y="-7750" width="250" height="750"/>
+  <object id="254" x="3250" y="-8750" width="250" height="750"/>
+  <object id="255" type="kill" x="3187.5" y="-8000" width="375" height="250"/>
+  <object id="256" type="kill" x="3125" y="-7000" width="437.5" height="250"/>
+  <object id="257" type="kill" x="3187.5" y="-6000" width="375" height="250"/>
+  <object id="258" x="2500" y="-7250" width="250" height="750"/>
+  <object id="259" x="2500" y="-8250" width="250" height="750"/>
+  <object id="260" type="kill" x="2250" y="-7500" width="625" height="250"/>
+  <object id="261" type="kill" x="2375" y="-6500" width="500" height="250"/>
+  <object id="262" type="kill" x="2437.5" y="-9000" width="375" height="750"/>
+  <object id="263" x="2312.5" y="-5750" width="687.5" height="250"/>
+  <object id="264" x="1750" y="-6750" width="250" height="750"/>
+  <object id="265" x="1750" y="-7750" width="250" height="750"/>
+  <object id="266" x="1750" y="-8750" width="250" height="750"/>
+  <object id="267" type="kill" x="1500" y="-8000" width="750" height="250"/>
+  <object id="268" type="kill" x="1500" y="-7000" width="750" height="250"/>
+  <object id="269" type="kill" x="1500" y="-6000" width="625" height="250"/>
  </objectgroup>
 </map>

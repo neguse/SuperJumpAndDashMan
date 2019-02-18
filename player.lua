@@ -94,7 +94,17 @@ function player:update(dt)
 	local touchNum = 0
 	for i, contact in ipairs(contacts) do
 		if contact:isTouching() then
-			touchNum = touchNum + 1
+			-- wall's getUserData is nil
+			local a, b = contact:getFixtures()
+			if a:getUserData() == self then
+				if b:getUserData() == nil then
+					touchNum = touchNum + 1
+				end
+			elseif b:getUserData() == self then
+				if a:getUserData() == nil then
+					touchNum = touchNum + 1
+				end
+			end
 		end
 	end
 	if touchNum > 0 then
@@ -137,12 +147,15 @@ function player:update(dt)
 	local vx, vy = self:getVelocity()
 	self.body:applyForce(force * (ix * velocity - vx), 0)
 
-	-- dash x
+	-- dash
 	if self.input:getDash() and self:dashable() then
 		local force = 10
 		local velocity = 300
 		local vx, vy = self.body:getLinearVelocity()
-		self.body:applyLinearImpulse(ix * force * math.max(velocity - math.abs(vx), 0), 0)
+		local mass = self.body:getMass()
+		local fx = ix * force * math.max(velocity - math.abs(vx), 0)
+		local fy = math.max(-vy * mass, 0)
+		self.body:applyLinearImpulse(fx, fy)
 		self.dashTime = 0.5
 		self.dashNum = self.dashNum - 1
 	end

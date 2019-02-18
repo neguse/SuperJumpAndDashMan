@@ -51,7 +51,7 @@ end
 function love.draw()
 	cam:push()
 
-	dr:grid()
+	-- dr:grid()
 
 	pl:render()
 	map:render()

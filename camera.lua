@@ -30,7 +30,7 @@ end
 
 function camera:update(dt)
 	if math.abs(self.tx - self.x) > 300 then
-		self.x = self.x + (self.tx - self.x) * dt * 5
+		self.x = self.x + (self.tx - self.x) * dt
 	end
 	if math.abs(self.ty - self.y) > 200 then
 		self.y = self.y + (self.ty - self.y) * dt * 5

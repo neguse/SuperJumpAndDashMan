@@ -51,11 +51,21 @@ function input:getAxis()
 	if love.keyboard.isDown("down") then
 		y = y - 1
 	end
+
 	joysticks = love.joystick.getJoysticks()
 	if #joysticks > 0 then
-		dir1, dir2 = joysticks[1]:getAxes()
-		x = x + dir1
-		y = y + dir2
+		local joystick = joysticks[1]
+		-- axes
+		dir1, dir2 = joystick:getAxes()
+		x = x + math.min(math.max(dir1 * 1.2, -1), 1)
+		-- hat
+		local h1 = joystick:getHat(1)
+		if string.find(h1, "l") then
+			x = x - 1
+		end
+		if string.find(h1, "r") then
+			x = x + 1
+		end
 	end
 	return normalizeCoord(x, y)
 end
