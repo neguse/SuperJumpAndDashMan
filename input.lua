@@ -56,8 +56,14 @@ function input:getAxis()
 	if #joysticks > 0 then
 		local joystick = joysticks[1]
 		-- axes
-		dir1, dir2 = joystick:getAxes()
-		x = x + math.min(math.max(dir1 * 1.2, -1), 1)
+		local dir1, dir2 = joystick:getAxes()
+		local low = 0.1
+		local hi = 0.8
+		if dir1 < -low then
+			x = x + math.max((dir1 + low) / (hi - low), -1)
+		elseif dir1 > low then
+			x = x + math.min((dir1 - low) / (hi - low), 1)
+		end
 		-- hat
 		local h1 = joystick:getHat(1)
 		if string.find(h1, "l") then

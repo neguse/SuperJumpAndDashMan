@@ -1,6 +1,6 @@
 .PHONY: love clean run
 
-TITLE=Untitled
+TITLE=SuperJumpAndDashMan
 TILED=/Applications/Tiled.app/Contents/MacOS/Tiled
 
 clean:

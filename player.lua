@@ -3,6 +3,7 @@ local player = {}
 local width = 25
 local height = 50
 local killY = -3000
+local deadTimerMax = 1.5
 
 function player.new(world, input, draw, camera, map)
 	local body = love.physics.newBody(world, 0, 10, "dynamic")
@@ -14,6 +15,9 @@ function player.new(world, input, draw, camera, map)
 
 	local bgm = love.audio.newSource("bgm.wav", "stream")
 	bgm:setLooping(true)
+
+	local frictionSound = love.audio.newSource("friction.wav", "static")
+	frictionSound:setLooping(true)
 
 	local pl =
 		setmetatable(
@@ -36,6 +40,7 @@ function player.new(world, input, draw, camera, map)
 			gameTime = nil,
 			goalTime = nil,
 			dead = false,
+			deadTimer = deadTimerMax,
 			shadows = {},
 			respawnPoint = nil,
 			groundConsequent = 0,
@@ -47,6 +52,8 @@ function player.new(world, input, draw, camera, map)
 			itemSound = love.audio.newSource("item.wav", "static"),
 			checkpointSound = love.audio.newSource("checkpoint.wav", "static"),
 			goalSound = love.audio.newSource("goal.wav", "static"),
+			walkSound = love.audio.newSource("walk.wav", "static"),
+			frictionSound = frictionSound,
 			bgm = bgm
 		},
 		{__index = player}
@@ -63,11 +70,19 @@ function player:setRespawnPoint(x, y)
 	self.respawnPoint = {x = x, y = y}
 end
 
+function player:kill()
+	self.dead = true
+	love.audio.play(self.deathSound)
+end
+
 function player:respawn()
 	local point = self.respawnPoint
 	self:warpTo(point.x, point.y)
 	self.camera:set(point.x, point.y)
 	self.dead = false
+	self.deadTimer = deadTimerMax
+	self.body:setActive(true)
+	self.body:setLinearVelocity(0, 0)
 end
 
 function player:warpTo(x, y)
@@ -127,8 +142,21 @@ function player:update(dt)
 	end
 	if touchNum > 0 then
 		self.state = "ground"
+		local vx, vy = self:getVelocity()
+		if (vx * vx + vy * vy) > 15000 then
+			if math.abs(vy) < 10.0 then
+				self.walkSound:play()
+			elseif vy < -100 then
+				self.frictionSound:play()
+			end
+		else
+			self.walkSound:stop()
+			self.frictionSound:stop()
+		end
 	else
 		self.state = "air"
+		self.frictionSound:stop()
+		self.walkSound:stop()
 	end
 
 	if self.state == "ground" then
@@ -151,9 +179,11 @@ function player:update(dt)
 	self:addShadow()
 	if self:dashing() then
 		self.dashTime = self.dashTime - dt
-	end
-	if #self.shadows > 16 then
-		self:consumeShadow()
+	else
+		if #self.shadows > 1 then
+			self:consumeShadow()
+			self:consumeShadow()
+		end
 	end
 
 	-- move x
@@ -203,12 +233,15 @@ function player:update(dt)
 
 	local x, y = self:getPosition()
 	if y < killY then
-		self.dead = true
+		self:kill()
 	end
 
 	if self.dead then
-		love.audio.play(self.deathSound)
-		self:respawn()
+		self.body:setActive(false)
+		self.deadTimer = self.deadTimer - dt
+		if self.deadTimer < 0 then
+			self:respawn()
+		end
 	end
 
 	-- camera
@@ -219,7 +252,7 @@ function player:update(dt)
 end
 
 function timeString(sec)
-	return string.format("%4d:%02.2f", math.floor(sec / 60), sec % 60)
+	return string.format("%4d:%02d.%02d", math.floor(sec / 60), math.floor(sec % 60), math.floor(sec * 100) % 100)
 end
 
 function player:renderui()
@@ -229,19 +262,20 @@ function player:renderui()
 	if self.goalTime then
 		love.graphics.print("goal:" .. timeString(self.goalTime), 0, 20)
 	end
-	--[[
-	love.graphics.print(string.format("state: %8s %8s", self.state, self.dashTime > 0 and "dash" or "nodash"))
-	local x, y = self.body:getPosition()
-	love.graphics.print(string.format("pos: %6.1f %6.1f", x, y), 0, 20)
-	local vx, vy = self.body:getLinearVelocity()
-	love.graphics.print(string.format("velo: %6.1f %6.1f", vx, vy), 0, 40)
-	]]
 	if self.jumpMax > 0 then
 		love.graphics.print(string.format("jump: %d", self.jumpNum), 0, 60)
 	end
 	if self.dashMax > 0 then
 		love.graphics.print(string.format("dash: %d", self.dashNum), 0, 80)
 	end
+
+	--[[
+	love.graphics.print(string.format("state: %8s %8s", self.state, self.dashTime > 0 and "dash" or "nodash"), 0, 100)
+	local x, y = self.body:getPosition()
+	love.graphics.print(string.format("pos: %6.1f %6.1f", x, y), 0, 120)
+	local vx, vy = self.body:getLinearVelocity()
+	love.graphics.print(string.format("velo: %6.1f %6.1f", vx, vy), 0, 140)
+	]]
 end
 
 function pack(...)
@@ -263,10 +297,8 @@ end
 
 function player:render()
 	self.draw:polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
-	if not self:dashable() then
-		self:renderShadow()
-	end
-	if self:jumpable() then
+	self:renderShadow()
+	if self:jumpable() and (self.jumpNum < self.jumpMax) then
 		local x, y = self.body:getPosition()
 		love.graphics.ellipse("line", x, y - height / 2, 30, 10)
 	end
@@ -278,7 +310,7 @@ function player:onContact(o)
 		love.audio.play(self.groundSound)
 		return
 	elseif t == "K" then
-		self.dead = true
+		self:kill()
 		return
 	end
 	if t == "C" then
@@ -295,8 +327,9 @@ function player:onContact(o)
 		self.dashNum = 0
 		self.dashMax = 0
 		self.map:resetItems()
-		love.audio.stop(bgm)
+		love.audio.stop(self.bgm)
 		love.audio.play(self.goalSound)
+		self:setRespawnPoint(self.map:getStartPoint())
 		return
 	end
 	if t == "S" then
@@ -315,11 +348,11 @@ end
 function player:onEndContact(o)
 	local t = o:getType()
 	if t == "S" then
-		if self.gameTime == nil then
+		if self.gameTime == nil and not self.dead then
 			self.gameTime = 0
+			self.bgm:seek(0)
+			self.bgm:play()
 		end
-		self.bgm:seek(0)
-		self.bgm:play()
 		return
 	end
 end
