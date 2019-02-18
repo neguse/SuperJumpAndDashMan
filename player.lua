@@ -35,7 +35,14 @@ function player.new(world, input, draw, camera, map)
 			shadows = {},
 			respawnPoint = nil,
 			groundConsequent = 0,
-			state = "ground"
+			state = "ground",
+			dashSound = love.audio.newSource("dash.wav", "static"),
+			jumpSound = love.audio.newSource("jump.wav", "static"),
+			groundSound = love.audio.newSource("ground.wav", "static"),
+			deathSound = love.audio.newSource("death.wav", "static"),
+			itemSound = love.audio.newSource("item.wav", "static"),
+			checkpointSound = love.audio.newSource("checkpoint.wav", "static"),
+			goalSound = love.audio.newSource("goal.wav", "static")
 		},
 		{__index = player}
 	)
@@ -164,6 +171,7 @@ function player:update(dt)
 		self.body:applyLinearImpulse(fx, fy)
 		self.dashTime = 0.5
 		self.dashNum = self.dashNum - 1
+		love.audio.play(self.dashSound)
 	end
 
 	-- jump
@@ -185,6 +193,7 @@ function player:update(dt)
 		local fx, fy = dvx * mass, dvy * mass
 		self.body:applyLinearImpulse(fx, fy)
 		self.jumpNum = self.jumpNum - 1
+		love.audio.play(self.jumpSound)
 	end
 
 	local x, y = self:getPosition()
@@ -193,6 +202,7 @@ function player:update(dt)
 	end
 
 	if self.dead then
+		love.audio.play(self.deathSound)
 		self:respawn()
 	end
 
@@ -258,14 +268,18 @@ function player:render()
 end
 
 function player:onContact(o)
-	local t = o:getType()
-	if t == "K" then
+	local t = o and o:getType()
+	if not t then
+		love.audio.play(self.groundSound)
+		return
+	elseif t == "K" then
 		self.dead = true
 		return
 	end
 	if t == "C" then
 		local x, y = o:getPosition()
 		self:setRespawnPoint(x, y)
+		love.audio.play(self.checkpointSound)
 		return
 	end
 	if t == "G" then
@@ -276,6 +290,7 @@ function player:onContact(o)
 		self.dashNum = 0
 		self.dashMax = 0
 		self.map:resetItems()
+		love.audio.play(self.goalSound)
 		return
 	end
 	if t == "S" then
@@ -287,6 +302,7 @@ function player:onContact(o)
 		elseif t == "D" then
 			self.dashMax = self.dashMax + 1
 		end
+		love.audio.play(self.itemSound)
 	end
 end
 

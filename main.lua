@@ -13,10 +13,7 @@ local pl = player.new(world, inp, dr, cam, map)
 
 function beginContact(a, b, coll)
 	local ao, bo = a:getUserData(), b:getUserData()
-	if not ao or not bo or not ao.getType or not bo.getType then
-		return
-	end
-	local at, bt = ao:getType(), bo:getType()
+	local at, bt = ao and ao.getType and ao:getType(), bo and bo.getType and bo:getType()
 	if at == "P" then
 		ao:onContact(bo)
 	elseif bt == "P" then
