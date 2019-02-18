@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="250" tileheight="250" infinite="1" nextlayerid="4" nextobjectid="270">
+<map version="1.2" tiledversion="1.2.2" orientation="orthogonal" renderorder="right-up" width="100" height="100" tilewidth="250" tileheight="250" infinite="1" nextlayerid="4" nextobjectid="281">
  <objectgroup id="3" name="platform">
   <object id="36" type="entry" x="0" y="-2250">
    <point/>
   </object>
   <object id="37" x="-500" y="-1750" width="1000" height="250"/>
-  <object id="38" x="0" y="-2000" width="100" height="20">
-   <text wrap="1" valign="bottom">Hello World!</text>
+  <object id="38" x="0" y="-2125" width="100" height="20">
+   <text wrap="1" valign="bottom">Super Jump And Dash Man</text>
   </object>
   <object id="39" x="250" y="-1875" width="89.5469" height="18.8438">
    <text wrap="1">Press Right is right.</text>
@@ -93,11 +93,6 @@
   <object id="95" x="2125" y="1875" width="89.5469" height="18.8438">
    <text wrap="1">?</text>
   </object>
-  <object id="96" type="itemDash" x="2125" y="2812.5">
-   <point/>
-  </object>
-  <object id="98" x="2250" y="2937.5" width="62.5" height="62.5"/>
-  <object id="99" x="1937.5" y="2937.5" width="62.5" height="62.5"/>
   <object id="100" x="10750" y="-500" width="250" height="250"/>
   <object id="101" x="10000" y="-1000" width="89.5469" height="18.8438">
    <text wrap="1">Dash! And Jump! And Dash again</text>
@@ -137,12 +132,6 @@
   <object id="148" type="kill" x="10750" y="-4749" width="250" height="250"/>
   <object id="149" x="10250" y="-4750" width="250" height="250"/>
   <object id="150" x="1937.5" y="3000" width="375" height="62.5"/>
-  <object id="151" type="itemJump" x="2062.5" y="2875">
-   <point/>
-  </object>
-  <object id="152" type="itemJump" x="2187.5" y="2875">
-   <point/>
-  </object>
   <object id="153" x="-1250" y="-1437.5" width="89.5469" height="18.8438">
    <text wrap="1">What?</text>
   </object>
@@ -213,5 +202,21 @@
   <object id="267" type="kill" x="1500" y="-8000" width="750" height="250"/>
   <object id="268" type="kill" x="1500" y="-7000" width="750" height="250"/>
   <object id="269" type="kill" x="1500" y="-6000" width="625" height="250"/>
+  <object id="270" x="2062.5" y="2937.5" width="89.5469" height="18.8438">
+   <text wrap="1">!LOVE2019!</text>
+  </object>
+  <object id="272" x="62.5" y="-2062.5" width="89.5469" height="18.8438">
+   <text wrap="1">by neguse in #lovejam2019</text>
+  </object>
+  <object id="273" x="875" y="-8500" width="250" height="3250" rotation="20"/>
+  <object id="274" x="-1125" y="-6000" width="187.5" height="1687.5" rotation="-20"/>
+  <object id="276" x="-62.5" y="-4187.5" width="89.5469" height="18.8438">
+   <text wrap="1">It's the end.</text>
+  </object>
+  <object id="277" x="-62.5" y="-3687.5" width="89.5469" height="18.8438">
+   <text wrap="1">Thanks for playing!</text>
+  </object>
+  <object id="278" type="goal" x="-500" y="-3000" width="1000" height="500"/>
+  <object id="280" type="start" x="-500" y="-2250" width="1000" height="500"/>
  </objectgroup>
 </map>

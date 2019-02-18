@@ -25,6 +25,16 @@ function beginContact(a, b, coll)
 end
 
 function endContact(a, b, coll)
+	local ao, bo = a:getUserData(), b:getUserData()
+	if not ao or not bo or not ao.getType or not bo.getType then
+		return
+	end
+	local at, bt = ao:getType(), bo:getType()
+	if at == "P" then
+		ao:onEndContact(bo)
+	elseif bt == "P" then
+		bo:onEndContact(ao)
+	end
 end
 
 function preSolve(a, b, coll)

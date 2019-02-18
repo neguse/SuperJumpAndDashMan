@@ -20,8 +20,8 @@ function rotated(x, y, angle)
 	return nx, ny
 end
 
-local kill = {}
-function kill:getType()
+local wall = {}
+function wall:getType()
 	return self.type
 end
 
@@ -43,9 +43,17 @@ function map.new(world)
 					local shape = love.physics.newRectangleShape(0, 0, obj.width, obj.height, angle)
 					local fixture = love.physics.newFixture(body, shape, 1)
 					if obj.type == "kill" then
-						ud = setmetatable({type = "K"}, {__index = kill})
+						ud = setmetatable({type = "K"}, {__index = wall})
 						fixture:setUserData(ud)
 						table.insert(kills, body)
+					elseif obj.type == "start" then
+						ud = setmetatable({type = "S"}, {__index = wall})
+						fixture:setUserData(ud)
+						fixture:setSensor(true)
+					elseif obj.type == "goal" then
+						ud = setmetatable({type = "G"}, {__index = wall})
+						fixture:setUserData(ud)
+						fixture:setSensor(true)
 					else
 						table.insert(bodies, body)
 					end

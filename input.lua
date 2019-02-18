@@ -75,7 +75,8 @@ function input:getJump()
 end
 
 function input:getDash()
-	return self.nowDash and not self.prevDash
+	local ix, _ = self:getAxis()
+	return self.nowDash and not self.prevDash and math.abs(ix) > 0.02
 end
 
 return input

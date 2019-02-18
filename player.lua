@@ -28,6 +28,8 @@ function player.new(world, input, draw, camera)
 			jumpRepair = 0,
 			dashRepair = 0,
 			dashTime = 0,
+			gameTime = nil,
+			goalTime = nil,
 			dead = false,
 			shadows = {},
 			respawnPoint = nil,
@@ -89,6 +91,9 @@ function player:consumeShadow()
 end
 
 function player:update(dt)
+	if self.gameTime then
+		self.gameTime = self.gameTime + dt
+	end
 	local ix, iy = self.input.getAxis()
 	local contacts = self.body:getContacts()
 	local touchNum = 0
@@ -197,14 +202,30 @@ function player:update(dt)
 	self.camera:target(x, y, ts)
 end
 
+function timeString(sec)
+	return string.format("%4d:%02.2f", math.floor(sec / 60), sec % 60)
+end
+
 function player:renderui()
+	if self.gameTime then
+		love.graphics.print("time:" .. timeString(self.gameTime), 0, 0)
+	end
+	if self.goalTime then
+		love.graphics.print("goal:" .. timeString(self.goalTime), 0, 20)
+	end
+	--[[
 	love.graphics.print(string.format("state: %8s %8s", self.state, self.dashTime > 0 and "dash" or "nodash"))
 	local x, y = self.body:getPosition()
 	love.graphics.print(string.format("pos: %6.1f %6.1f", x, y), 0, 20)
 	local vx, vy = self.body:getLinearVelocity()
 	love.graphics.print(string.format("velo: %6.1f %6.1f", vx, vy), 0, 40)
-	love.graphics.print(string.format("jump: %d %d %d", self.jumpNum, self.jumpMax, self.jumpRepair), 0, 60)
-	love.graphics.print(string.format("dash: %d %d %d", self.dashNum, self.dashMax, self.dashRepair), 0, 80)
+	]]
+	if self.jumpMax > 0 then
+		love.graphics.print(string.format("jump: %d", self.jumpNum), 0, 60)
+	end
+	if self.dashMax > 0 then
+		love.graphics.print(string.format("dash: %d", self.dashNum), 0, 80)
+	end
 end
 
 function pack(...)
@@ -246,12 +267,30 @@ function player:onContact(o)
 		self:setRespawnPoint(x, y)
 		return
 	end
+	if t == "G" then
+		self.goalTime = self.gameTime
+		return
+	end
+	if t == "S" then
+		self.jumpMax = 0
+		self.dashMax = 0
+		self.gameTime = nil
+		return
+	end
 	if o:consume() then
 		if t == "J" then
 			self.jumpMax = self.jumpMax + 1
 		elseif t == "D" then
 			self.dashMax = self.dashMax + 1
 		end
+	end
+end
+
+function player:onEndContact(o)
+	local t = o:getType()
+	if t == "S" then
+		self.gameTime = 0
+		return
 	end
 end
 
