@@ -20,7 +20,7 @@
   <object id="42" x="500" y="1500" width="250" height="250"/>
   <object id="43" x="750" y="1625" width="250" height="250"/>
   <object id="44" x="1000" y="1500" width="250" height="250"/>
-  <object id="45" type="itemJump" x="875" y="1500">
+  <object id="45" type="itemJump" x="875" y="1375">
    <point/>
   </object>
   <object id="46" x="875" y="1375" width="89.5469" height="18.8438">
@@ -78,7 +78,7 @@
   </object>
   <object id="87" x="7500" y="-500" width="250" height="250"/>
   <object id="88" x="7250" y="-375" width="250" height="125"/>
-  <object id="89" type="itemDash" x="7375" y="-500">
+  <object id="89" type="itemDash" x="7375" y="-625">
    <point/>
   </object>
   <object id="90" x="7500" y="-750" width="89.5469" height="18.8438">
@@ -164,7 +164,7 @@
   </object>
   <object id="185" x="5750" y="-4750" width="250" height="250"/>
   <object id="186" x="6000" y="-4625" width="250" height="125"/>
-  <object id="187" type="itemJump" x="6125" y="-4687.5">
+  <object id="187" type="itemJump" x="6125" y="-4812.5">
    <point/>
   </object>
   <object id="202" x="5500" y="-5375" width="250" height="250"/>

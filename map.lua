@@ -29,6 +29,7 @@ function map.new(world)
 	local platform = nil
 	local startPoint = nil
 	local items = {}
+	local origItems = {}
 	local checkpoints = {}
 	local texts = {}
 	for i, layer in ipairs(mapdata.layers) do
@@ -60,9 +61,9 @@ function map.new(world)
 				elseif obj.shape == "point" and obj.type == "entry" then
 					startPoint = {x = obj.x, y = -obj.y}
 				elseif obj.shape == "point" and obj.type == "itemJump" then
-					table.insert(items, item.new(world, obj.x, -obj.y, "J"))
+					table.insert(origItems, obj)
 				elseif obj.shape == "point" and obj.type == "itemDash" then
-					table.insert(items, item.new(world, obj.x, -obj.y, "D"))
+					table.insert(origItems, obj)
 				elseif obj.shape == "point" and obj.type == "checkpoint" then
 					table.insert(checkpoints, checkpoint.new(world, obj.x, -obj.y))
 				elseif obj.shape == "text" then
@@ -73,6 +74,7 @@ function map.new(world)
 				bodies = bodies,
 				kills = kills,
 				items = items,
+				origItems = origItems,
 				checkpoints = checkpoints,
 				texts = texts
 			}
@@ -81,8 +83,10 @@ function map.new(world)
 
 	return setmetatable(
 		{
+			world = world,
 			platform = platform,
-			startPoint = startPoint
+			startPoint = startPoint,
+			resetRequired = true
 		},
 		{__index = map}
 	)
@@ -93,6 +97,22 @@ function map:getStartPoint()
 end
 
 function map:update()
+	if self.resetRequired then
+		self.resetRequired = false
+		for _, item in ipairs(self.platform.items) do
+			item:consume()
+		end
+		for _, obj in ipairs(self.platform.origItems) do
+			local type = nil
+			if obj.type == "itemJump" then
+				type = "J"
+			elseif obj.type == "itemDash" then
+				type = "D"
+			end
+			table.insert(self.platform.items, item.new(self.world, obj.x, -obj.y, type))
+		end
+	end
+
 	local i = 1
 	while i <= #self.platform.items do
 		local item = self.platform.items[i]
@@ -128,6 +148,10 @@ function map:render()
 	for _, text in ipairs(self.platform.texts) do
 		love.graphics.print(text.text, text.x, -text.y, 0, 4, -4)
 	end
+end
+
+function map:resetItems()
+	self.resetRequired = true
 end
 
 return map

@@ -4,7 +4,7 @@ local width = 25
 local height = 50
 local killY = -3000
 
-function player.new(world, input, draw, camera)
+function player.new(world, input, draw, camera, map)
 	local body = love.physics.newBody(world, 0, 10, "dynamic")
 	local shape = love.physics.newRectangleShape(width, height)
 	local fixture = love.physics.newFixture(body, shape, 1)
@@ -18,6 +18,7 @@ function player.new(world, input, draw, camera)
 			input = input,
 			draw = draw,
 			camera = camera,
+			map = map,
 			body = body,
 			shape = shape,
 			fixture = fixture,
@@ -91,7 +92,7 @@ function player:consumeShadow()
 end
 
 function player:update(dt)
-	if self.gameTime then
+	if self.gameTime ~= nil then
 		self.gameTime = self.gameTime + dt
 	end
 	local ix, iy = self.input.getAxis()
@@ -269,12 +270,15 @@ function player:onContact(o)
 	end
 	if t == "G" then
 		self.goalTime = self.gameTime
+		self.gameTime = nil
+		self.jumpNum = 0
+		self.jumpMax = 0
+		self.dashNum = 0
+		self.dashMax = 0
+		self.map:resetItems()
 		return
 	end
 	if t == "S" then
-		self.jumpMax = 0
-		self.dashMax = 0
-		self.gameTime = nil
 		return
 	end
 	if o:consume() then
@@ -289,7 +293,9 @@ end
 function player:onEndContact(o)
 	local t = o:getType()
 	if t == "S" then
-		self.gameTime = 0
+		if self.gameTime == nil then
+			self.gameTime = 0
+		end
 		return
 	end
 end
