@@ -11,6 +11,10 @@ function player.new(world, input, draw, camera, map)
 	body:setFixedRotation(true)
 	-- print(body:getMass())
 	body:setMass(2.77)
+
+	local bgm = love.audio.newSource("bgm.wav", "stream")
+	bgm:setLooping(true)
+
 	local pl =
 		setmetatable(
 		{
@@ -42,7 +46,8 @@ function player.new(world, input, draw, camera, map)
 			deathSound = love.audio.newSource("death.wav", "static"),
 			itemSound = love.audio.newSource("item.wav", "static"),
 			checkpointSound = love.audio.newSource("checkpoint.wav", "static"),
-			goalSound = love.audio.newSource("goal.wav", "static")
+			goalSound = love.audio.newSource("goal.wav", "static"),
+			bgm = bgm
 		},
 		{__index = player}
 	)
@@ -290,6 +295,7 @@ function player:onContact(o)
 		self.dashNum = 0
 		self.dashMax = 0
 		self.map:resetItems()
+		love.audio.stop(bgm)
 		love.audio.play(self.goalSound)
 		return
 	end
@@ -312,6 +318,8 @@ function player:onEndContact(o)
 		if self.gameTime == nil then
 			self.gameTime = 0
 		end
+		self.bgm:seek(0)
+		self.bgm:play()
 		return
 	end
 end
