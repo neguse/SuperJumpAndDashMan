@@ -48,6 +48,7 @@ function love.load()
 end
 
 function love.update(dt)
+	love.timer.sleep(0.001)
 	world:update(dt)
 	map:update(dt)
 	inp:update()

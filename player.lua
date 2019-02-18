@@ -102,11 +102,11 @@ function player:getVelocity()
 end
 
 function player:jumpable()
-	return self.jumpNum > 0
+	return self.jumpNum > 0 and not self.dead
 end
 
 function player:dashable()
-	return self.dashNum > 0 and not (self.dashTime > 0)
+	return self.dashNum > 0 and not (self.dashTime > 0) and not self.dead
 end
 
 function player:addShadow()
@@ -213,8 +213,12 @@ function player:update(dt)
 	if self.input:getJump() and self:jumpable() then
 		local xx, yy = 0, 0
 		for i, contact in ipairs(contacts) do
-			local x, y = contact:getNormal()
-			xx, yy = xx + x, yy + y
+			local a, b = contact:getFixtures()
+			-- only accumulate wall collision
+			if contact:isTouching() and (a:getUserData() == nil or b:getUserData() == nil) then
+				local x, y = contact:getNormal()
+				xx, yy = xx + x, yy + y
+			end
 		end
 		local a = -math.atan2(xx, yy) + math.pi * 0.5 -- angle of normal
 		local vx, vy = self:getVelocity()
